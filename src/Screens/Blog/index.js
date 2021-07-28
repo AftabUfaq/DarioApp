@@ -1,28 +1,93 @@
 import React, { useState } from 'react'
-import { View, Text, Image, Dimensions, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
+import { View, Text, Image, Linking, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
 import { Container, Content } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp, heightPercentageToDP } from 'react-native-responsive-screen';
 import { mystyles } from '../../styles';
 import HeaderBackBtnWithText from '../../Components/HeaderBackBtnWithText';
 const Blog = ({ navigation }) => {
-    const [blogDetails, setBlogDetails] = useState([
+
+    let data = [
         {
-            id: 1,
+            id:"1",
+            link:"https://www.didiskincareasiatica.com/detergenti",
             img: require('../../assets/images/blog1.png'),
-            text: "More you know more beautiful you become"
+            text: "More you know more beautiful you become",
+            name:"Cleansers"
         },
+
         {
-            id: 2,
+            id:"2",
+            link:"https://www.didiskincareasiatica.com/esfolianti",
             img: require('../../assets/images/blog2.png'),
-            text: "Top benefits or lotus herbals beauty cream"
+            text: "Top benefits or lotus herbals beauty cream",
+            name:"Exfoliants"
         },
         {
-            id: 3,
+            id:"3",
+            link:"https://www.didiskincareasiatica.com/tonici",
             img: require('../../assets/images/blog3.png'),
-            text: "More you know more beautiful you become"
+            text: "More you know more beautiful you become",
+            name:"Toners"
         },
-    ])
+        {
+            id:"4",
+            link:"https://www.didiskincareasiatica.com/essenze",
+            img: require('../../assets/images/blog1.png'),
+            text: "More you know more beautiful you become",
+            name:"Essences"
+        },
+        {
+            id:"5",
+            link:"https://www.didiskincareasiatica.com/sieri",
+            img: require('../../assets/images/blog2.png'),
+            text: "Top benefits or lotus herbals beauty cream",
+            name:"Serums"
+        },
+        {
+            id:"6",
+            link:"https://www.didiskincareasiatica.com/maschere",
+            img: require('../../assets/images/blog3.png'),
+            text: "More you know more beautiful you become",
+            name:"Masks"
+        },
+        {
+            id:"7",
+            link:"https://www.didiskincareasiatica.com/trattamenti-occhi",
+            img: require('../../assets/images/blog2.png'),
+            text: "Top benefits or lotus herbals beauty cream",
+            name:"Eye Treatment"
+        },
+        {
+            id:"8",
+            link:"https://www.didiskincareasiatica.com/creme-idratanti",
+            img: require('../../assets/images/blog1.png'),
+            text: "More you know more beautiful you become",
+            name:"Moisturizers"
+        },
+        {
+            id:"9",
+            link:"https://www.didiskincareasiatica.com/creme-solari",
+            img: require('../../assets/images/blog2.png'),
+            text: "Top benefits or lotus herbals beauty cream",
+            name:"Sunscreens"
+        },
+        {
+            id:"10",
+            link:"https://www.didiskincareasiatica.com/maschere-notturne",
+            img: require('../../assets/images/blog3.png'),
+            text: "More you know more beautiful you become",
+            name:"Night Masks"
+        },
+        {
+            id:"11",
+            link:"https://www.didiskincareasiatica.com/make-up",
+            img: require('../../assets/images/blog3.png'),
+            text: "More you know more beautiful you become",
+            name:"Makeup"
+        },
+      
+    ]
     return (
         <Container>
             <Content>
@@ -35,15 +100,15 @@ const Blog = ({ navigation }) => {
                 </LinearGradient>
 
                 <FlatList
-                    data={blogDetails}
+                    data={data}
                     renderItem={({ item, index }) =>
                         <TouchableOpacity style={styles.ImageWithTextBtnView}>
                             <Image style={{ marginVertical: 15 }} source={item.img} />
                             <Text style={styles.text}>{item.text} </Text>
-                            <TouchableOpacity style={{ marginVertical: 5 }}>
+                            <TouchableOpacity style={{ marginVertical: 5 }} onPress={()=>{ Linking.openURL(item.link)}}>
                                 <Text style={{ alignSelf: 'center', color: '#2575FC' }}>
                                     Click here to read more
-   </Text>
+                                </Text>
                             </TouchableOpacity>
                         </TouchableOpacity>
                     } />
@@ -64,3 +129,11 @@ const styles = StyleSheet.create({
         color: '#4F4F4F', marginVertical: 5, textAlign: 'center'
     }
 })
+
+
+
+
+// 
+//  
+// 
+//   //

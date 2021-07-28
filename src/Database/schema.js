@@ -13,3 +13,16 @@ export const ProductsSchema = {
   }
 };
 
+export const DIARY = "Diary"
+export const DIARY_SCHEMA = {
+  name:DIARY,
+  primaryKey:"DiaryId",
+  properties:{
+    DiaryId:"int",
+    SkinRating:"string",
+    IssueRating:"string",
+    Feedback:"string",
+    Image:"string",
+    Date:"string"
+  }
+}

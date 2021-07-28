@@ -17,10 +17,8 @@ const { width, height } = Dimensions.get('window')
 import {PRODUCTS_SCHEMA, ProductsSchema,DATABASENAME} from '../../Database/schema'
 let realm = null;
 const AddProduct = ({ navigation }) => {
-    const [showImgs, setShowImgs] = useState(false)
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
-    const [image, setImage] = useState(null)
     const [items, setItems] = useState([
         { label: 'Cleanser', value: 'Cleanser' },
         { label: 'Toner', value: 'Toner' },
@@ -34,6 +32,8 @@ const AddProduct = ({ navigation }) => {
         { label: 'Make up', value: 'Make up' },
     ]);
     const [AMTimechecked, setAMTimeChecked] = useState(false);
+    const [PMTimeChecked, setPMTimeChecked] = useState(false)
+    
     const [productName, setProductName] = useState('')
     const [ProductImg, setProductImg] = useState([
         {
@@ -53,7 +53,9 @@ const AddProduct = ({ navigation }) => {
     ])
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
-  
+    const [showImgs, setShowImgs] = useState(false)
+    const [image, setImage] = useState(null)
+    
    
 
     useEffect(() => {
@@ -65,18 +67,44 @@ const AddProduct = ({ navigation }) => {
     },[])
 
     const FinishAddingHandler = () => {
-        //navigation.navigate('ProductList')
-        realm.write(() => {
-            var ID = realm.objects(PRODUCTS_SCHEMA).length + 1;
-             realm.create(PRODUCTS_SCHEMA, {
-                ProductID:ID, 
-                ProductName:productName, 
-                ProductStep:value,
-                ProductTime:`${AMTimechecked}`, 
-                ProductImage:image,
-                ProductDate: `${+ new Date()}`
-              });
-          })
+        if(productName == null|| productName == ""){
+            alert("Please Enter Product Name");
+            return;
+        }
+        if(value == null || value == ""){
+            alert("Please Enter Product Setup");
+            return;
+        }
+        if(image == null || image == ""){
+            alert("Please Select an Image");
+            return;
+        }
+        if(AMTimechecked) {
+            realm.write(() => {
+                var ID = realm.objects(PRODUCTS_SCHEMA).length + 1;
+                realm.create(PRODUCTS_SCHEMA, {
+                    ProductID:ID, 
+                    ProductName:productName, 
+                    ProductStep:value,
+                    ProductTime:`${AMTimechecked}`, 
+                    ProductImage:image,
+                    ProductDate: `${+ new Date()}`
+                });
+            })
+        }
+        if(PMTimeChecked){
+            realm.write(() => {
+                var ID = realm.objects(PRODUCTS_SCHEMA).length + 1;
+                realm.create(PRODUCTS_SCHEMA, {
+                    ProductID:ID, 
+                    ProductName:productName, 
+                    ProductStep:value,
+                    ProductTime:"false", 
+                    ProductImage:image,
+                    ProductDate: `${+ new Date()}`
+                });
+            })
+        }
           Alert.alert("Product Details Added Successfully.")
     }
 
@@ -206,27 +234,27 @@ const AddProduct = ({ navigation }) => {
                     </View>
 
                     <View style={styles.chooseProductTextInputView}>
-                        <ScrollView style={{flexDirection:"row"}}>
                             <DropDownPicker
                                 dropDownContainerStyle={{
                                     backgroundColor: '#000',
                                     color: '#2575FC',
+                                    height:600
                                 }}
 
                                 onClose={() => setOpen(false)}
                                 open={open}
                                 style={{ borderColor: '#FFFFFF', color: '#2575FC' }}
                                 containerStyle={{
-                                    width: wp('40%'),
-                                    // flex: 1,
-                                    height: 300,
+                                    width: wp('50%'),
+                                     flex: 1,
+                                    minHeight:300,
                                     color: '#2575FC',
                                     borderColor: '#FFFF',
                                     alignSelf: 'center'
                                 }}
                                 mode="SIMPLE"
                                 max={15}
-                                iconContainerStyle={{ color: '#2575FC' }}
+                                iconContainerStyle={{ color: 'red' }}
                                 arrowIconStyle={{  }}
                                 placeholder="Choose the steps"
                                 // labelProps={}
@@ -239,7 +267,7 @@ const AddProduct = ({ navigation }) => {
                                 setValue={setValue}
                                 setItems={setItems}
                             />
-                        </ScrollView>
+                       
                     </View>
 
                     <View style={styles.AmPMCheckBoxMainView}>
@@ -256,8 +284,8 @@ const AddProduct = ({ navigation }) => {
 
                         <View style={[styles.AmPmCheckBoxView, { marginHorizontal: 10, }]}>
                             <Text style={styles.AmPmText}>PM</Text>
-                            <TouchableOpacity onPress={() => setAMTimeChecked(!AMTimechecked)} style={styles.AMPMcheckboxBtn}>
-                                {!AMTimechecked ?
+                            <TouchableOpacity onPress={() => setPMTimeChecked(!PMTimeChecked)} style={styles.AMPMcheckboxBtn}>
+                                {PMTimeChecked ?
                                     <Image style={{ alignSelf: 'center' }} source={require('../../assets/images/tick.png')} />
                                     : null}
 

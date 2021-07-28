@@ -6,84 +6,14 @@ import ToggleSwitch from 'toggle-switch-react-native'
 import Realm from 'realm'
 import DrawerBtnWithImgText from '../../Components/DrawerImgWithTextBtn';
 import RNFetchBlob from 'rn-fetch-blob'
-import {DATABASENAME} from '../../Database/schema'
-import { createAlarm } from 'react-native-simple-alarm';
-import moment from 'moment'
-import PushNotification, {Importance}  from "react-native-push-notification";
+import {DATABASENAME, } from '../../Database/schema'
+import AlarmClock from 'react-native-alarm-clock';
 let realm = null;
-PushNotification.configure({
-    // (optional) Called when Token is generated (iOS and Android)
-    onRegister: function (token) {
-      console.log("TOKEN:", token);
-    },
-  
-    // (required) Called when a remote is received or opened, or local notification is opened
-    onNotification: function (notification) {
-      console.log("NOTIFICATION:", notification);
-  
-      // process the notification
-  
-      // (required) Called when a remote is received or opened, or local notification is opened
-      notification.finish(PushNotificationIOS.FetchResult.NoData);
-    },
-  
-    // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
-    onAction: function (notification) {
-      console.log("ACTION:", notification.action);
-      console.log("NOTIFICATION:", notification);
-  
-      // process the action
-    },
-  
-    // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
-    onRegistrationError: function(err) {
-      console.error(err.message, err);
-    },
-  
-    // IOS ONLY (optional): default: all - Permissions to register.
-    permissions: {
-      alert: true,
-      badge: true,
-      sound: true,
-    },
-  
-    // Should the initial notification be popped automatically
-    // default: true
-    popInitialNotification: true,
-  
-    /**
-     * (optional) default: true
-     * - Specified if permissions (ios) and token (android and ios) will requested or not,
-     * - if not, you must call PushNotificationsHandler.requestPermissions() later
-     * - if you are not using remote notification or do not have Firebase installed, use this:
-     *     requestPermissions: Platform.OS === 'ios'
-     */
-    requestPermissions: true,
-  });
+
 const DrawerContentt = ({ navigation, props }) => {
     const [ToggleRoutineReminder, setToggleRoutineReminder] = useState(false)
     const [ToggleNoProduct, setToggleNoProduct] = useState(false)
-    useEffect(() => {
-        PushNotification.checkPermissions((permissions) => {
-            console.log(permissions)
-            if (!permissions.alert) {
-              alert('Please enable push notifications for the alarm to work');
-            }else{
-                PushNotification.createChannel(
-                    {
-                      channelId: "mynotificationchannel1", // (required)
-                      channelName: "My channel", // (required)
-                      channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
-                      playSound:true, // (optional) default: true
-                      soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
-                      importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
-                      vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
-                    },
-                    (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-                  );
-            }
-          });
-    },[])
+    
     const pathToCopy = `${RNFetchBlob.fs.dirs.DownloadDir}/DiarioApp/`
     const BackupHandler = () => {
         realm = new Realm({ path: DATABASENAME });
@@ -100,31 +30,44 @@ const DrawerContentt = ({ navigation, props }) => {
       
         RNFetchBlob.fs.cp(realm.path, `${pathToCopy}${DATABASENAME}`)
         .then((data) => { 
-                console.log("BAckup Create successfully", data)
+                console.log("BAckup Create successfully", `${pathToCopy}${DATABASENAME}`)
          })
         .catch((err) => { 
             console.log("Some Error", err)
          })
     }
     const RestoreDataHandler = () => {
-        alert('Restore')
+        realm = new Realm({ path: DATABASENAME });
+        realm.write(async () => {
+            try{
+             await realm.delete(realm.objects('Products'));
+             alert("restored Successfully")
+            }
+            catch(err){
+                console.log(err)
+                alert("Error")
+            }
+        });
+        
     }
     const RateUsHandler = () => {
         navigation.navigate('Reviews')
     }
 
     const setalaram = async (isOn) => {
+        if(ToggleRoutineReminder){
+            alert("already set the alarm");
+            return;   
+        }
         setToggleRoutineReminder(isOn)
-        try {
-            await createAlarm({
-                active: true,
-                date: moment().format(),
-                message: 'message',
-                snooze: 1,
-              });
-          } catch (e) {
-              console.log(e)
-          }
+        let dateam = new Date();
+        dateam.setDate(dateam.getDate()+1);
+        dateam.setHours(8,0);
+        AlarmClock.createAlarm(dateam.toISOString(), 'Alaram set for next day at 8:00 Am');
+        let datepm = new Date();
+        datepm.setDate(datepm.getDate()+1);
+        datepm.setHours(20,0);
+        AlarmClock.createAlarm(datepm.toISOString(), 'Alaram set for next day at 8:00 PM');
     }
 
     return (
@@ -156,7 +99,7 @@ const DrawerContentt = ({ navigation, props }) => {
 
                             <View style={{ marginHorizontal: 5, flex: 1 }}>
                                 <Text style={{ color: '#FFFF', fontWeight: 'bold' }}>Routine reminders</Text>
-                                <Text style={{ color: '#FFFF' }}>08:0 Am and 08:00 PM</Text>
+                                <Text style={{ color: '#FFFF' }}>08:00 AM and 08:00 PM</Text>
                             </View>
 
                             <ToggleSwitch

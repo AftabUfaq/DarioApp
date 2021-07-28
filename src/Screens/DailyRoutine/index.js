@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Content } from 'native-base';
-import { View, Text, TextInput, FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TextInput, FlatList,Alert, TouchableOpacity,PermissionsAndroid, Image, StyleSheet } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import Icon from 'react-native-vector-icons/Ionicons'
+import Realm from 'realm'
 import LinearGradient from 'react-native-linear-gradient';
 import { mystyles } from '../../styles';
 import NameWithReadMore from '../../Components/NameWithReadMore';
@@ -10,15 +10,26 @@ import TextInputWithCheck from '../../Components/TextInputWithCheck';
 import BottomLargeBtn from '../../Components/BottomLargeBtn';
 import HeaderBackTextWithTime from '../../Components/HeaderBackBtnWithTime';
 import StarRating from 'react-native-star-rating';
-import BackBtnTextWithDate from '../../Components/BackBtnTextBelowDateHeader';
-
+import ImagePicker from 'react-native-image-crop-picker';
+import storage from '@react-native-firebase/storage';
+import ProgressCircle from 'react-native-progress-circle'
+import {DATABASENAME,DIARY, DIARY_SCHEMA} from '../../Database/schema'
+let realm = null;
 
 const DailyRoutine = ({ route, navigation }) => {
     const { myroute } = route.params;
-    console.log("Route :      " + myroute)
+    const [uploading, setUploading] = useState(false);
+    const [transferred, setTransferred] = useState(0);
+    const [image, setImage] = useState(null)
+    
 
-
-
+    useEffect(() => {
+        realm = new Realm({
+            path: DATABASENAME,
+            schema:[DIARY_SCHEMA]
+        });
+      
+    },[])
     const [UploadedImg, setUploadedImg] = useState([
         {
             id: 1,
@@ -42,7 +53,7 @@ const DailyRoutine = ({ route, navigation }) => {
     const [RatingIssues, setRatingIssues] = useState('3')
     const [showImages, setShowImages] = useState(false)
     const [date, setDate] = useState('11 Feb,2021')
-    console.log(RoutineBtn)
+    const [feedback ,setFeedBack] = useState(null)
     const foamingCleanserHandler = (val) => {
         setFoamingCleanser(val)
     }
@@ -68,13 +79,146 @@ const DailyRoutine = ({ route, navigation }) => {
         navigation.navigate('ExportToRoutine' ,{data})
     }
     const SubmitFeedbackHandler = () => {
-        navigation.navigate('Home')
+       
+        if(RatingSkin == null || RatingSkin == ""){
+            alert("Please tap Rating skin;")
+            return;
+        }
+        if(RatingIssues == null || RatingIssues ==""){
+            alert("Please tap Rating Issue;")
+            return;
+        }
+        if(feedback == null || feedback == "" ){
+            alert("Please Enter Feedback")
+            return;
+        }
+        if(image == null || image == ""){
+            alert("Pleae Upload An Image")
+            return; 
+        }
+        try{
+        realm.write(() => {
+            var ID = realm.objects(DIARY).length + 1;
+             realm.create(DIARY, {
+                DiaryId:ID, 
+                SkinRating:`${RatingSkin}`, 
+                IssueRating:`${RatingIssues}`,
+                Feedback:feedback, 
+                Image:image,
+                Date: `${+ new Date()}`
+              });
+          })
+          Alert.alert("Product Details Added Successfully.")
+        }catch(err){
+            console.log(err)
+            alert("Some Unknow Error Occured");
+        }
     }
     useEffect(() => {
         myroute === 'AM' ? setRoutineBtn('AM') :
             myroute === 'PM' ? setRoutineBtn('PM')
                 : myroute === 'Diary' ? setRoutineBtn('Diary') : null
-    }, [])
+    }, []);
+
+    const openGallery =( ) => {
+        if(Platform.OS === "android"){
+            PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, {
+                title: "Cool Photo App Camera Permission",
+                message:
+                  "Cool Photo App needs access to your camera " +
+                  "so you can take awesome pictures.",
+                buttonNeutral: "Ask Me Later",
+                buttonNegative: "Cancel",
+                buttonPositive: "OK"
+              }).then(() => {
+                if(PermissionsAndroid.RESULTS.GRANTED){
+                    ImagePicker.openPicker({
+                        width: 300,
+                        height: 400,
+                      
+                        cropping: true
+                      }).then(async (image) => {
+                        setUploading(true);
+                        setTransferred(0);
+                        const { path } = image;
+                       // const filename = path.substring(uri.lastIndexOf('/') + 1);
+                        const uploadUri = Platform.OS === 'ios' ? path.replace('file://', '') : path;
+                        const name = + new Date();
+                        const task = storage()
+                            .ref(`images/${name}`)
+                            .putFile(uploadUri);
+                        // set progress state
+                        task.on('state_changed', snapshot => {
+                            setTransferred(Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                           
+                        });
+                        try {
+                            await task;
+                        } catch (e) {
+                            console.error(e);
+                        }
+                        setUploading(false);
+                        const url = await storage().ref(`images/${name}`).getDownloadURL();
+                        setImage(url)
+                      }).catch((error) => {
+                        console.log(error)
+                    });                   
+                }else{
+                    alert("Please Grant Permission")
+                }
+                
+            });
+        }
+    }
+    const openCamera =() => {
+        if(Platform.OS === "android"){
+            PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
+                title: "Cool Photo App Camera Permission",
+                message:
+                  "Cool Photo App needs access to your camera " +
+                  "so you can take awesome pictures.",
+                buttonNeutral: "Ask Me Later",
+                buttonNegative: "Cancel",
+                buttonPositive: "OK"
+              }).then(() => {
+                if(PermissionsAndroid.RESULTS.GRANTED){
+                    ImagePicker.openCamera({
+                        width: 300,
+                        height: 400,
+                        includeBase64:true,
+                        cropping: true,
+                      }).then(async (image) => {
+                        setUploading(true);
+                        setTransferred(0);
+                        const { path } = image;
+                       // const filename = path.substring(uri.lastIndexOf('/') + 1);
+                        const uploadUri = Platform.OS === 'ios' ? path.replace('file://', '') : path;
+                        const name = + new Date();
+                        const task = storage()
+                            .ref(`images/${name}`)
+                            .putFile(uploadUri);
+                        // set progress state
+                        task.on('state_changed', snapshot => {
+                            setTransferred(Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                           
+                        });
+                        try {
+                            await task;
+                        } catch (e) {
+                            console.error(e);
+                        }
+                        setUploading(false);
+                        const url = await storage().ref(`images/${name}`).getDownloadURL();
+                        setImage(url)
+                      }).catch((error) => {
+                        console.log(error)
+                    });      
+                }else{
+                    alert("Please Grant Permission")
+                }
+              });
+        }
+    }
     return (
         <Container style={{ backgroundColor: '#FFFF' }}>
             <Content contentContainerStyle={{ backgroundColor: '#FFFF' }}>
@@ -218,6 +362,8 @@ const DailyRoutine = ({ route, navigation }) => {
                             <TextInput
                                 style={{ textAlign: 'center' }}
                                 multiline
+                                value={feedback}
+                                onChangeText={(txy) => setFeedBack(txy)}
                                 numberOfLines={5}
                                 placeholder="lorem ipsum dollar set amet lorem ipsum dollar set amet lorem ipsum dollar set\namet lorem ipsum dollar set amet lorem ipsum\ndollar set amet" />
 
@@ -228,7 +374,23 @@ const DailyRoutine = ({ route, navigation }) => {
                             <Text style={styles.uploadPhotosText}>Upload photos</Text>
                         </View>
 
-                        {showImages ?
+                        {uploading?
+                        <View style={{alignSelf:"center"}}>
+                            <ProgressCircle
+                                percent={transferred}
+                                radius={50}        
+                                borderWidth={8}
+                                color="#3399FF"
+                                shadowColor="#999"
+                                bgColor="#fff"
+                        >
+                            <Text style={{ fontSize: 18 }}>{transferred}%</Text>
+                        </ProgressCircle>
+                        
+                        </View>
+                        :image!==null?
+                        <Image source={{uri:image}} style={{resizeMode:"cover", width:100,height:100,backgroundColor:"red", borderRadius:10, alignSelf:"center"}} />
+                        :showImages ?
                             <FlatList
                                 data={UploadedImg}
                                 horizontal
@@ -251,11 +413,11 @@ const DailyRoutine = ({ route, navigation }) => {
 
 
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <TouchableOpacity onPress={() => setShowImages(!showImages)}>
+                            <TouchableOpacity onPress={() => openCamera()}>
                                 <Image source={require('../../assets/images/download.png')} />
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => setShowImages(true)}>
+                            <TouchableOpacity onPress={() => openGallery()}>
                                 <Image source={require('../../assets/images/camera.png')} />
                             </TouchableOpacity>
                         </View>
