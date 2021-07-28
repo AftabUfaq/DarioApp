@@ -6,9 +6,9 @@ export const ProductsSchema = {
   properties: {
     ProductID: "int",
     ProductName: "string",
-    ProductStep:"string",
+    ProductStep:"string?",
     ProductTime:"string",
-    ProductImage:"string",
+    ProductImage:"string?",
     ProductDate:"string"
   }
 };

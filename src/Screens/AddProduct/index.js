@@ -75,10 +75,10 @@ const AddProduct = ({ navigation }) => {
             alert("Please Enter Product Setup");
             return;
         }
-        if(image == null || image == ""){
-            alert("Please Select an Image");
-            return;
-        }
+        // if(image == null || image == ""){
+        //     alert("Please Select an Image");
+        //     return;
+        // }
         if(AMTimechecked) {
             realm.write(() => {
                 var ID = realm.objects(PRODUCTS_SCHEMA).length + 1;
@@ -233,41 +233,50 @@ const AddProduct = ({ navigation }) => {
                             placeholder="Type product name here" placeholderTextColor="#878787" />
                     </View>
 
-                    <View style={styles.chooseProductTextInputView}>
-                            <DropDownPicker
-                                dropDownContainerStyle={{
-                                    backgroundColor: '#000',
-                                    color: '#2575FC',
-                                    height:600
-                                }}
+                    <View style={[styles.chooseProductTextInputView, { height: 60 }]}>
+                        <DropDownPicker
+                            dropDownContainerStyle={{
+                                backgroundColor: '#000',
+                                color: '#2575FC',
+                                alignSelf: 'center'
+                                , flex: 1,
+                                // height: 600
+                            }}
+                            listMode="MODAL"
+                            DropDownPicker="TOP"
+                            dropDownDirection="BOTTOM"
+                            onClose={() => setOpen(false)}
+                            open={open}
+                            style={{
+                                borderColor: '#FFFFFF', alignSelf: 'center',
+                                color: '#2575FC'
+                            }}
+                            containerStyle={{
+                                width: wp('40%'),
+                                alignItems: 'center',
+                                // flex: 1,
+                                minHeight: 300,
 
-                                onClose={() => setOpen(false)}
-                                open={open}
-                                style={{ borderColor: '#FFFFFF', color: '#2575FC' }}
-                                containerStyle={{
-                                    width: wp('50%'),
-                                     flex: 1,
-                                    minHeight:300,
-                                    color: '#2575FC',
-                                    borderColor: '#FFFF',
-                                    alignSelf: 'center'
-                                }}
-                                mode="SIMPLE"
-                                max={15}
-                                iconContainerStyle={{ color: 'red' }}
-                                arrowIconStyle={{  }}
-                                placeholder="Choose the steps"
-                                // labelProps={}
-                                textStyle={{ color: '#2575FC' }}
-                                value={value}
-                                items={items}
+                                color: '#2575FC',
+                                borderColor: '#FFFF',
+                                alignSelf: 'center'
+                            }}
+                            mode="SIMPLE"
+                            max={15}
+                            iconContainerStyle={{ color: 'red' }}
+                            arrowIconStyle={{}}
+                            placeholder="Choose the steps"
+                            // labelProps={}
+                            textStyle={{ color: '#2575FC' }}
+                            value={value}
+                            items={items}
 
-                                onChangeValue={(val) => setValue(val)}
-                                setOpen={setOpen}
-                                setValue={setValue}
-                                setItems={setItems}
-                            />
-                       
+                            onChangeValue={(val) => setValue(val)}
+                            setOpen={setOpen}
+                            setValue={setValue}
+                            setItems={setItems}
+                        />
+
                     </View>
 
                     <View style={styles.AmPMCheckBoxMainView}>
