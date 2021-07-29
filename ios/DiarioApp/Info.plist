@@ -8,6 +8,8 @@
 	<string>DiarioApp</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+	 <key>NSCameraUsageDescription</key>
+  <string>to take photos from Gallery and Camera for adding product images</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -52,6 +54,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	
 	<key>UIAppFonts</key>
 	<array>
 		<string>Roboto-Black.ttf</string>

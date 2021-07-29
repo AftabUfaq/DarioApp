@@ -1,4 +1,4 @@
-   import React, { useState } from 'react'
+import React, { useState } from 'react'
 import { Container, Content } from 'native-base';
 import { View, Text, TextInput, FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -10,13 +10,14 @@ const BackBtnTextWithDate = ({ date, text, dateColor, iconTitleColor, navigation
     return (
         <View style={{}}>
             <View style={[mystyles.menuTextView, { marginVertical: 20 }]}>
+
                 <View style={mystyles.menuView}>
                     <TouchableOpacity onPress={() => navigation.goBack()} style={{}}>
                         <Icon name="chevron-back-outline" size={30} color={iconTitleColor} />
                     </TouchableOpacity>
                 </View>
 
-                <View style={[mystyles.textView, { alignSelf: 'center' }]}>
+                <View style={[mystyles.textView, { marginRight: 30, alignSelf: 'center' }]}>
                     <Text style={[mystyles.DiarioSkinCareText, { color: iconTitleColor }]}>{text} </Text>
                 </View>
 

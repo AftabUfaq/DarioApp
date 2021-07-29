@@ -12,6 +12,8 @@ target 'DiarioApp' do
     :hermes_enabled => false
   )
 
+  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
+
   target 'DiarioAppTests' do
     inherit! :complete
     # Pods for testing

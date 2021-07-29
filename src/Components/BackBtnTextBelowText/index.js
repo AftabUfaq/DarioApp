@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Content } from 'native-base';
+import { Container, Content, Header, Body, Left, Right } from 'native-base';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons'
