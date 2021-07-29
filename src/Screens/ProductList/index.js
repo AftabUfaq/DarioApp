@@ -78,13 +78,17 @@ const ProductList = ({ navigation }) => {
                     start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                     colors={['#6A11CB', '#2575FC']} style={styles.ProductLinearGradientView}>
 
-                    
+                    {Product.length?
                     <FlatList
                         data={Product}
                         horizontal
                         renderItem={renderItem}
+                        
                         keyExtractor={item => item.ProductID.toString()}
                     />
+                    :
+                    <Text style={{color:"#fff", alignSelf:"center", fontSize:20}}>No Products</Text>
+                    }
                 </LinearGradient>
 
                 <View style={{ position: 'absolute', bottom: 30, }}>

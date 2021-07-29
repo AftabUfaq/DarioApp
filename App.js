@@ -19,71 +19,7 @@ import HomeStack from './src/Navigations/homeStack';
 import Drawerr from './src/Navigations/Drawer';
 const Stack = createStackNavigator();
 
-import PushNotification from 'react-native-push-notification';
-import {cancelAlarmById} from 'react-native-simple-alarm';
-import PushNotificationIOS from '@react-native-community/push-notification-ios';
-
 const App = () => {
-  useEffect(() => {
-    const setnotification = async () => {
-      if (Platform.OS === 'android') {
-        await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        ]);
-      }
-  
-      PushNotification.configure({
-        onNotification: async function (notification) {
-          const {message, data, userInteraction} = notification;
-  
-          if (userInteraction) {
-            await cancelAlarmById(
-              Platform.select({ios: data && data.id, android: notification.id}),
-            );
-            Actions.Home();
-          }
-  
-          if (notification && !userInteraction) {
-            Alert.alert(message, '', [
-              {
-                text: 'OK',
-                onPress: async () => {
-                  await cancelAlarmById(
-                    Platform.select({
-                      ios: data && data.id,
-                      android: notification.id,
-                    }),
-                  );
-                 
-                },
-              },
-            ]);
-          }
-          notification.finish(PushNotificationIOS.FetchResult.NoData);
-        },
-        permissions: {
-          alert: true,
-          badge: true,
-          sound: true,
-        },
-  
-        popInitialNotification: true,
-        requestPermissions: true,
-      });
-  
-      AppState.addEventListener('change', _handleAppStateChange);
-    }
-    setnotification()
-  },[])
-
-  const   _handleAppStateChange = async (appState) => {
-    if (appState === 'active') {
-    }
-
-    if (appState === 'background' || appState === 'inactive') {
-    }
-  };
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash">

@@ -6,10 +6,23 @@ export const ProductsSchema = {
   properties: {
     ProductID: "int",
     ProductName: "string",
-    ProductStep:"string",
+    ProductStep:"string?",
     ProductTime:"string",
-    ProductImage:"string",
+    ProductImage:"string?",
     ProductDate:"string"
   }
 };
 
+export const DIARY = "Diary"
+export const DIARY_SCHEMA = {
+  name:DIARY,
+  primaryKey:"DiaryId",
+  properties:{
+    DiaryId:"int",
+    SkinRating:"string",
+    IssueRating:"string",
+    Feedback:"string",
+    Image:"string",
+    Date:"string"
+  }
+}
