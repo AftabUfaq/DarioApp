@@ -69,8 +69,12 @@ const DailyRoutine = ({ route, navigation }) => {
         setEssenceToner(val)
     }
     const EditBtnHandler = () => {
-        navigation.navigate('ChooseDate')
+        navigation.navigate('ChooseDate',{onGoBack:setdateonthisscreen})
     }
+
+    const setdateonthisscreen = (data) => {
+        setDate(data)
+    } 
     const ExportToPictureHandler = () => {
         let data = [
             {id:"cleansingOil", name: cleansingOil , img:require('../../assets/images/product1.png')},

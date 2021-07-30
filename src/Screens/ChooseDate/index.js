@@ -9,16 +9,16 @@ import HeaderBackTextWithTime from '../../Components/HeaderBackBtnWithTime';
 import BottomLargeBtn from '../../Components/BottomLargeBtn';
 import CalendarPicker from 'react-native-calendar-picker';
 import BackBtnTextWithDate from '../../Components/BackBtnTextBelowDateHeader';
+import Entypo from 'react-native-vector-icons/Entypo'
 
-
-
-const ChooseDate = ({ navigation }) => {
+const ChooseDate = ({ navigation, route }) => {
     const [date, setDate] = useState(new Date())
     const onChange = (Date) => {
         setDate(Date)
     }
     const ChooseDateHandler = () => {
-        navigation.navigate('DailyRoutine')
+        route.params.onGoBack(date)
+        navigation.goBack();
     }
     return (
         <Container style={{ backgroundColor: '#E5E5E5' }}>
@@ -32,26 +32,12 @@ const ChooseDate = ({ navigation }) => {
                         iconTitleColor="#FFFF"
                         dateColor="#FFFF"
                         date={date} navigation={navigation} />
-                    {/* <View style={[mystyles.menuTextView, { marginVertical: 20 }]}>
-                        <View style={mystyles.menuView}>
-                            <TouchableOpacity onPress={() => navigation.goBack()} style={{}}>
-                                <Icon name="chevron-back-outline" size={30} color="#FFFF" />
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={[mystyles.textView, { alignSelf: 'center' }]}>
-                            <Text style={mystyles.DiarioSkinCareText}>Choose the date </Text>
-                        </View>
-
-                    </View>
-
-                    <View style={{ alignSelf: 'center', flexDirection: 'row' }}>
-                        <Text style={{ alignSelf: 'center', fontSize: 14, color: '#FFFF' }}>11 Feb,2021</Text>
-                    </View> */}
 
                 </LinearGradient>
 
                 <View style={styles.calendarView}>
+                    <Entypo name="chevron-small-down"  size={32} color={"#FC257F"} 
+                        style={{position:"absolute",right:100, alignSelf:"center", top:7,}} />
                     <CalendarPicker
                         // nextTitle={{}}
                         // textStyle={{ fontWeight: 'bold', color: '#2575FC' }}
