@@ -15,17 +15,17 @@ import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 const ProductList = ({ navigation }) => {
     const isFocused = useIsFocused()
     const [Product, setProduct] = useState([])
-
+    realm = new Realm({
+        path: DATABASENAME,
+        schema: [ProductsSchema]
+    });
 
     const AddProductHandler = () => {
         navigation.navigate('AddProduct')
     }
     useFocusEffect(
         useCallback(() => {
-            realm = new Realm({
-                path: DATABASENAME,
-                schema: [ProductsSchema]
-            });
+           
             try {
                 var productsdetalils = realm.objects(PRODUCTS_SCHEMA);
                 setProduct(productsdetalils)
@@ -34,20 +34,34 @@ const ProductList = ({ navigation }) => {
             }
         }, [isFocused])
     );
+    useEffect(() => {
+        realm.addListener('change', () => {
+            var productsdetalils = realm.objects(PRODUCTS_SCHEMA);
+                setProduct(productsdetalils)
+        });
+
+        return  () => realm.removeAllListeners();
+    })
     const [Toggle, setToggle] = useState(false)
-
+        const deleteobject = (item) => {
+            realm.write(() => {
+                realm.delete(item)
+            })
+        }
     const renderItem = ({ item }) => {
-
         return (
 
             <View style={{ width: width - 100, alignSelf: "center" }}>
                 <View style={styles.productView}>
-                    <Image style={{
-                        width: wp('60%'), height: wp("60%"),
-                        overflow: "hidden", borderTopLeftRadius: 20, borderTopRightRadius: 20
-                    }}
-                        resizeMode="cover" source={{ uri: item.ProductImage }} />
-                    <TouchableOpacity style={{
+                {item.ProductImage == null || item.ProductImage == "" ?
+                <Image style={{ width: wp('50%'), height:wp("70%"), overflow:"hidden", alignSelf:"center", borderTopLeftRadius:20, borderTopRightRadius:20 }}
+                    resizeMode="cover" source={require('../../assets/images/noProduct.png')} />
+                    :
+                <Image style={{ width: wp('60%'), height:wp("70%"), overflow:"hidden", borderTopLeftRadius:20, borderTopRightRadius:20 }}
+                    resizeMode="cover" source={{uri:item.ProductImage}} />}
+                    <TouchableOpacity 
+                        onPress={() => deleteobject(item)}
+                        style={{
                         position: 'absolute',
                         top: 10, right: 10
                     }}>

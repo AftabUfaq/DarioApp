@@ -55,6 +55,14 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	
+	
+	<key>NSCameraUsageDescription</key>
+  		<string>Diario app Want TO access camera</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+  		<string>Diaro App want to access Photos</string>
+  	<key>NSPhotoLibraryAddUsageDescription</key>
+  		<string>Diaro App want to access Photos</string>
+	
 	<key>UIAppFonts</key>
 	<array>
 		<string>Roboto-Black.ttf</string>

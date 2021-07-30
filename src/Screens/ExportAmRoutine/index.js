@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { Container, Content } from 'native-base'
-import { View, Text, ImageBackground,PermissionsAndroid, Alert,TextInput, FlatList, Dimensions, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, ImageBackground,PermissionsAndroid, Alert,TextInput, FlatList, Dimensions, TouchableOpacity, Image, StyleSheet, Platform } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons'
 import CameraRoll from '@react-native-community/cameraroll';

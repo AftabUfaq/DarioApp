@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Content } from 'native-base';
-import { View, Text, TextInput, FlatList,Alert, TouchableOpacity,PermissionsAndroid, Image, StyleSheet } from 'react-native';
+import { View, Text, TextInput, FlatList,Alert, TouchableOpacity,PermissionsAndroid, Image, StyleSheet, Platform } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Realm from 'realm'
 import LinearGradient from 'react-native-linear-gradient';
@@ -14,6 +14,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import ProgressCircle from 'react-native-progress-circle'
 import {DATABASENAME,DIARY, DIARY_SCHEMA} from '../../Database/schema'
+import {requestMultiple, PERMISSIONS} from 'react-native-permissions';
 let realm = null;
 
 const DailyRoutine = ({ route, navigation }) => {
@@ -24,8 +25,9 @@ const DailyRoutine = ({ route, navigation }) => {
     
 
     useEffect(() => {
-        realm = new Realm({
-            path: DATABASENAME,
+      
+        realm = new Realm.open({
+           
             schema:[DIARY_SCHEMA]
         });
       
@@ -49,8 +51,8 @@ const DailyRoutine = ({ route, navigation }) => {
     const [GreenTea, setGreenTea] = useState('');
     const [EssenceToner, setEssenceToner] = useState('')
     const [RoutineBtn, setRoutineBtn] = useState('AM')
-    const [RatingSkin, setSkinRating] = useState('1')
-    const [RatingIssues, setRatingIssues] = useState('3')
+    const [RatingSkin, setSkinRating] = useState(1)
+    const [RatingIssues, setRatingIssues] = useState(3)
     const [showImages, setShowImages] = useState(false)
     const [date, setDate] = useState('11 Feb,2021')
     const [feedback ,setFeedBack] = useState(null)
@@ -168,6 +170,46 @@ const DailyRoutine = ({ route, navigation }) => {
                 }
                 
             });
+        }else if(Platform.OS == "ios"){
+            requestMultiple([PERMISSIONS.IOS.PHOTO_LIBRARY,PERMISSIONS.IOS.MEDIA_LIBRARY,]).then((statuses) => {
+             
+                if(statuses[PERMISSIONS.IOS.CAMERA] == "granted" && statuses[PERMISSIONS.IOS.PHOTO_LIBRARY] == "granted" && statuses[PERMISSIONS.IOS.PHOTO_LIBRARY_ADD_ONLY] == "granted"){
+                    ImagePicker.openPicker({
+                        width: 300,
+                        height: 400,
+                      
+                        cropping: true
+                      }).then(async (image) => {
+                        setUploading(true);
+                        setTransferred(0);
+                        const { path } = image;
+                       // const filename = path.substring(uri.lastIndexOf('/') + 1);
+                        const uploadUri = Platform.OS === 'ios' ? path.replace('file://', '') : path;
+                        const name = + new Date();
+                        const task = storage()
+                            .ref(`images/${name}`)
+                            .putFile(uploadUri);
+                        // set progress state
+                        task.on('state_changed', snapshot => {
+                            setTransferred(Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                           
+                        });
+                        try {
+                            await task;
+                        } catch (e) {
+                            console.error(e);
+                        }
+                        setUploading(false);
+                        const url = await storage().ref(`images/${name}`).getDownloadURL();
+                        setImage(url)
+                      }).catch((error) => {
+                        console.log(error)
+                    });  
+                }else{
+                    alert("Please Allow Permissions")
+                }
+            })
+              
         }
     }
     const openCamera =() => {
@@ -214,7 +256,44 @@ const DailyRoutine = ({ route, navigation }) => {
                         console.log(error)
                     });      
                 }else{
-                    alert("Please Grant Permission")
+                    requestMultiple([PERMISSIONS.IOS.CAMERA]).then((statuses) => {
+                        console.log('Camera', statuses[PERMISSIONS.IOS.CAMERA]);
+                        if(statuses[PERMISSIONS.IOS.CAMERA] == "granted"){
+                            ImagePicker.openCamera({
+                                width: 300,
+                                height: 400,
+                                includeBase64:true,
+                                cropping: true,
+                              }).then(async (image) => {
+                                setUploading(true);
+                                setTransferred(0);
+                                const { path } = image;
+                               // const filename = path.substring(uri.lastIndexOf('/') + 1);
+                                const uploadUri = Platform.OS === 'ios' ? path.replace('file://', '') : path;
+                                const name = + new Date();
+                                const task = storage()
+                                    .ref(`images/${name}`)
+                                    .putFile(uploadUri);
+                                // set progress state
+                                task.on('state_changed', snapshot => {
+                                    setTransferred(Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                                   
+                                });
+                                try {
+                                    await task;
+                                } catch (e) {
+                                    console.error(e);
+                                }
+                                setUploading(false);
+                                const url = await storage().ref(`images/${name}`).getDownloadURL();
+                                setImage(url)
+                              }).catch((error) => {
+                                console.log(error)
+                            }); 
+                        }else{
+                            alert("Please Allow Permissions")
+                        }
+                      });
                 }
               });
         }
