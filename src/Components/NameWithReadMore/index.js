@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, Image, Linking, TouchableOpacity, StyleSheet } from 'react-native'
 
-const NameWithReadMore = ({ name, readMore }) => {
+const NameWithReadMore = ({ name, readMore, linkUrl }) => {
     return (
         <View style={styles.nameReadMoreView}>
             <Text style={styles.nameReadMoreText}>{name}</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => Linking.openURL(linkUrl)}>
                 <Text style={[styles.nameReadMoreText, { color: '#2575FC' }]}>
                     {readMore}
                 </Text>

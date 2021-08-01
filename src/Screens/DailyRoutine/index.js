@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Content } from 'native-base';
-import { View, Text, TextInput, FlatList,Alert, TouchableOpacity,PermissionsAndroid, Image, StyleSheet, Platform } from 'react-native';
+import { View, Text, TextInput, FlatList, Alert, Linking, TouchableOpacity, PermissionsAndroid, Image, StyleSheet, Platform } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Realm from 'realm'
 import LinearGradient from 'react-native-linear-gradient';
@@ -13,8 +13,8 @@ import StarRating from 'react-native-star-rating';
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import ProgressCircle from 'react-native-progress-circle'
-import {DATABASENAME,DIARY, DIARY_SCHEMA} from '../../Database/schema'
-import {requestMultiple, PERMISSIONS} from 'react-native-permissions';
+import { DATABASENAME, DIARY, DIARY_SCHEMA } from '../../Database/schema'
+import { requestMultiple, PERMISSIONS } from 'react-native-permissions';
 let realm = null;
 
 const DailyRoutine = ({ route, navigation }) => {
@@ -22,16 +22,16 @@ const DailyRoutine = ({ route, navigation }) => {
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
     const [image, setImage] = useState(null)
-    
+
 
     useEffect(() => {
-      
+
         realm = new Realm.open({
-           
-            schema:[DIARY_SCHEMA]
+
+            schema: [DIARY_SCHEMA]
         });
-      
-    },[])
+
+    }, [])
     const [UploadedImg, setUploadedImg] = useState([
         {
             id: 1,
@@ -55,7 +55,7 @@ const DailyRoutine = ({ route, navigation }) => {
     const [RatingIssues, setRatingIssues] = useState(3)
     const [showImages, setShowImages] = useState(false)
     const [date, setDate] = useState('11 Feb,2021')
-    const [feedback ,setFeedBack] = useState(null)
+    const [feedback, setFeedBack] = useState(null)
     const foamingCleanserHandler = (val) => {
         setFoamingCleanser(val)
     }
@@ -69,53 +69,53 @@ const DailyRoutine = ({ route, navigation }) => {
         setEssenceToner(val)
     }
     const EditBtnHandler = () => {
-        navigation.navigate('ChooseDate',{onGoBack:setdateonthisscreen})
+        navigation.navigate('ChooseDate', { onGoBack: setdateonthisscreen })
     }
 
     const setdateonthisscreen = (data) => {
         setDate(data)
-    } 
+    }
     const ExportToPictureHandler = () => {
         let data = [
-            {id:"cleansingOil", name: cleansingOil , img:require('../../assets/images/product1.png')},
-            {id:"foamingCleanser", name: foamingCleanser,img:require('../../assets/images/product2.png')},
-            {id:"GreenTea", name: GreenTea, img:require('../../assets/images/product1.png')},
-            {id:"EssenceToner", name: EssenceToner,img:require('../../assets/images/product2.png')}
+            { id: "cleansingOil", name: cleansingOil, img: require('../../assets/images/product1.png') },
+            { id: "foamingCleanser", name: foamingCleanser, img: require('../../assets/images/product2.png') },
+            { id: "GreenTea", name: GreenTea, img: require('../../assets/images/product1.png') },
+            { id: "EssenceToner", name: EssenceToner, img: require('../../assets/images/product2.png') }
         ]
-        navigation.navigate('ExportToRoutine' ,{data})
+        navigation.navigate('ExportToRoutine', { data })
     }
     const SubmitFeedbackHandler = () => {
-       
-        if(RatingSkin == null || RatingSkin == ""){
+
+        if (RatingSkin == null || RatingSkin == "") {
             alert("Please tap Rating skin;")
             return;
         }
-        if(RatingIssues == null || RatingIssues ==""){
+        if (RatingIssues == null || RatingIssues == "") {
             alert("Please tap Rating Issue;")
             return;
         }
-        if(feedback == null || feedback == "" ){
+        if (feedback == null || feedback == "") {
             alert("Please Enter Feedback")
             return;
         }
-        if(image == null || image == ""){
+        if (image == null || image == "") {
             alert("Pleae Upload An Image")
-            return; 
+            return;
         }
-        try{
-        realm.write(() => {
-            var ID = realm.objects(DIARY).length + 1;
-             realm.create(DIARY, {
-                DiaryId:ID, 
-                SkinRating:`${RatingSkin}`, 
-                IssueRating:`${RatingIssues}`,
-                Feedback:feedback, 
-                Image:image,
-                Date: `${+ new Date()}`
-              });
-          })
-          Alert.alert("Product Details Added Successfully.")
-        }catch(err){
+        try {
+            realm.write(() => {
+                var ID = realm.objects(DIARY).length + 1;
+                realm.create(DIARY, {
+                    DiaryId: ID,
+                    SkinRating: `${RatingSkin}`,
+                    IssueRating: `${RatingIssues}`,
+                    Feedback: feedback,
+                    Image: image,
+                    Date: `${+ new Date()}`
+                });
+            })
+            Alert.alert("Product Details Added Successfully.")
+        } catch (err) {
             console.log(err)
             alert("Some Unknow Error Occured");
         }
@@ -126,28 +126,28 @@ const DailyRoutine = ({ route, navigation }) => {
                 : myroute === 'Diary' ? setRoutineBtn('Diary') : null
     }, []);
 
-    const openGallery =( ) => {
-        if(Platform.OS === "android"){
+    const openGallery = () => {
+        if (Platform.OS === "android") {
             PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, {
                 title: "Cool Photo App Camera Permission",
                 message:
-                  "Cool Photo App needs access to your camera " +
-                  "so you can take awesome pictures.",
+                    "Cool Photo App needs access to your camera " +
+                    "so you can take awesome pictures.",
                 buttonNeutral: "Ask Me Later",
                 buttonNegative: "Cancel",
                 buttonPositive: "OK"
-              }).then(() => {
-                if(PermissionsAndroid.RESULTS.GRANTED){
+            }).then(() => {
+                if (PermissionsAndroid.RESULTS.GRANTED) {
                     ImagePicker.openPicker({
                         width: 300,
                         height: 400,
-                      
+
                         cropping: true
-                      }).then(async (image) => {
+                    }).then(async (image) => {
                         setUploading(true);
                         setTransferred(0);
                         const { path } = image;
-                       // const filename = path.substring(uri.lastIndexOf('/') + 1);
+                        // const filename = path.substring(uri.lastIndexOf('/') + 1);
                         const uploadUri = Platform.OS === 'ios' ? path.replace('file://', '') : path;
                         const name = + new Date();
                         const task = storage()
@@ -156,7 +156,7 @@ const DailyRoutine = ({ route, navigation }) => {
                         // set progress state
                         task.on('state_changed', snapshot => {
                             setTransferred(Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                           
+
                         });
                         try {
                             await task;
@@ -166,28 +166,28 @@ const DailyRoutine = ({ route, navigation }) => {
                         setUploading(false);
                         const url = await storage().ref(`images/${name}`).getDownloadURL();
                         setImage(url)
-                      }).catch((error) => {
+                    }).catch((error) => {
                         console.log(error)
-                    });                   
-                }else{
+                    });
+                } else {
                     alert("Please Grant Permission")
                 }
-                
+
             });
-        }else if(Platform.OS == "ios"){
-            requestMultiple([PERMISSIONS.IOS.PHOTO_LIBRARY,PERMISSIONS.IOS.MEDIA_LIBRARY,]).then((statuses) => {
-             
-                if(statuses[PERMISSIONS.IOS.CAMERA] == "granted" && statuses[PERMISSIONS.IOS.PHOTO_LIBRARY] == "granted" && statuses[PERMISSIONS.IOS.PHOTO_LIBRARY_ADD_ONLY] == "granted"){
+        } else if (Platform.OS == "ios") {
+            requestMultiple([PERMISSIONS.IOS.PHOTO_LIBRARY, PERMISSIONS.IOS.MEDIA_LIBRARY,]).then((statuses) => {
+
+                if (statuses[PERMISSIONS.IOS.CAMERA] == "granted" && statuses[PERMISSIONS.IOS.PHOTO_LIBRARY] == "granted" && statuses[PERMISSIONS.IOS.PHOTO_LIBRARY_ADD_ONLY] == "granted") {
                     ImagePicker.openPicker({
                         width: 300,
                         height: 400,
-                      
+
                         cropping: true
-                      }).then(async (image) => {
+                    }).then(async (image) => {
                         setUploading(true);
                         setTransferred(0);
                         const { path } = image;
-                       // const filename = path.substring(uri.lastIndexOf('/') + 1);
+                        // const filename = path.substring(uri.lastIndexOf('/') + 1);
                         const uploadUri = Platform.OS === 'ios' ? path.replace('file://', '') : path;
                         const name = + new Date();
                         const task = storage()
@@ -196,7 +196,7 @@ const DailyRoutine = ({ route, navigation }) => {
                         // set progress state
                         task.on('state_changed', snapshot => {
                             setTransferred(Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                           
+
                         });
                         try {
                             await task;
@@ -206,38 +206,38 @@ const DailyRoutine = ({ route, navigation }) => {
                         setUploading(false);
                         const url = await storage().ref(`images/${name}`).getDownloadURL();
                         setImage(url)
-                      }).catch((error) => {
+                    }).catch((error) => {
                         console.log(error)
-                    });  
-                }else{
+                    });
+                } else {
                     alert("Please Allow Permissions")
                 }
             })
-              
+
         }
     }
-    const openCamera =() => {
-        if(Platform.OS === "android"){
+    const openCamera = () => {
+        if (Platform.OS === "android") {
             PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
                 title: "Cool Photo App Camera Permission",
                 message:
-                  "Cool Photo App needs access to your camera " +
-                  "so you can take awesome pictures.",
+                    "Cool Photo App needs access to your camera " +
+                    "so you can take awesome pictures.",
                 buttonNeutral: "Ask Me Later",
                 buttonNegative: "Cancel",
                 buttonPositive: "OK"
-              }).then(() => {
-                if(PermissionsAndroid.RESULTS.GRANTED){
+            }).then(() => {
+                if (PermissionsAndroid.RESULTS.GRANTED) {
                     ImagePicker.openCamera({
                         width: 300,
                         height: 400,
-                        includeBase64:true,
+                        includeBase64: true,
                         cropping: true,
-                      }).then(async (image) => {
+                    }).then(async (image) => {
                         setUploading(true);
                         setTransferred(0);
                         const { path } = image;
-                       // const filename = path.substring(uri.lastIndexOf('/') + 1);
+                        // const filename = path.substring(uri.lastIndexOf('/') + 1);
                         const uploadUri = Platform.OS === 'ios' ? path.replace('file://', '') : path;
                         const name = + new Date();
                         const task = storage()
@@ -246,7 +246,7 @@ const DailyRoutine = ({ route, navigation }) => {
                         // set progress state
                         task.on('state_changed', snapshot => {
                             setTransferred(Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                           
+
                         });
                         try {
                             await task;
@@ -256,23 +256,23 @@ const DailyRoutine = ({ route, navigation }) => {
                         setUploading(false);
                         const url = await storage().ref(`images/${name}`).getDownloadURL();
                         setImage(url)
-                      }).catch((error) => {
+                    }).catch((error) => {
                         console.log(error)
-                    });      
-                }else{
+                    });
+                } else {
                     requestMultiple([PERMISSIONS.IOS.CAMERA]).then((statuses) => {
                         console.log('Camera', statuses[PERMISSIONS.IOS.CAMERA]);
-                        if(statuses[PERMISSIONS.IOS.CAMERA] == "granted"){
+                        if (statuses[PERMISSIONS.IOS.CAMERA] == "granted") {
                             ImagePicker.openCamera({
                                 width: 300,
                                 height: 400,
-                                includeBase64:true,
+                                includeBase64: true,
                                 cropping: true,
-                              }).then(async (image) => {
+                            }).then(async (image) => {
                                 setUploading(true);
                                 setTransferred(0);
                                 const { path } = image;
-                               // const filename = path.substring(uri.lastIndexOf('/') + 1);
+                                // const filename = path.substring(uri.lastIndexOf('/') + 1);
                                 const uploadUri = Platform.OS === 'ios' ? path.replace('file://', '') : path;
                                 const name = + new Date();
                                 const task = storage()
@@ -281,7 +281,7 @@ const DailyRoutine = ({ route, navigation }) => {
                                 // set progress state
                                 task.on('state_changed', snapshot => {
                                     setTransferred(Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                                   
+
                                 });
                                 try {
                                     await task;
@@ -291,15 +291,15 @@ const DailyRoutine = ({ route, navigation }) => {
                                 setUploading(false);
                                 const url = await storage().ref(`images/${name}`).getDownloadURL();
                                 setImage(url)
-                              }).catch((error) => {
+                            }).catch((error) => {
                                 console.log(error)
-                            }); 
-                        }else{
+                            });
+                        } else {
                             alert("Please Allow Permissions")
                         }
-                      });
+                    });
                 }
-              });
+            });
         }
     }
     return (
@@ -362,6 +362,7 @@ const DailyRoutine = ({ route, navigation }) => {
                     <View>
                         <NameWithReadMore name="Detersione"
                             readMore="Read more about cleansing oil"
+                            linkUrl="https://www.didiskincareasiatica.com/detergenti"
                         />
 
 
@@ -375,7 +376,9 @@ const DailyRoutine = ({ route, navigation }) => {
                         />
 
                         <NameWithReadMore name="Tonico"
-                            readMore="Read more about green tea" />
+                            readMore="Read more about green tea"
+                            linkUrl="https://www.didiskincareasiatica.com/tonici"
+                        />
 
 
                         <TextInputWithCheck state={GreenTea}
@@ -384,7 +387,8 @@ const DailyRoutine = ({ route, navigation }) => {
 
 
                         <NameWithReadMore name="Essense"
-                            readMore="Read more about toners" />
+                            readMore="Read more about toners"
+                            linkUrl="https://www.didiskincareasiatica.com/essenze" />
 
                         <TextInputWithCheck state={EssenceToner}
                             textHandler={EssenceTonerHandler}
@@ -457,41 +461,41 @@ const DailyRoutine = ({ route, navigation }) => {
                             <Text style={styles.uploadPhotosText}>Upload photos</Text>
                         </View>
 
-                        {uploading?
-                        <View style={{alignSelf:"center"}}>
-                            <ProgressCircle
-                                percent={transferred}
-                                radius={50}        
-                                borderWidth={8}
-                                color="#3399FF"
-                                shadowColor="#999"
-                                bgColor="#fff"
-                        >
-                            <Text style={{ fontSize: 18 }}>{transferred}%</Text>
-                        </ProgressCircle>
-                        
-                        </View>
-                        :image!==null?
-                        <Image source={{uri:image}} style={{resizeMode:"cover", width:100,height:100,backgroundColor:"red", borderRadius:10, alignSelf:"center"}} />
-                        :showImages ?
-                            <FlatList
-                                data={UploadedImg}
-                                horizontal
-                                showsHorizontalScrollIndicator={false}
-                                renderItem={({ item, index }) =>
-                                    <View style={{}}>
-                                        <Image resizeMode="contain" source={item.img} />
-                                        {/* <Image resizeMode="contain" source={require('../../assets/images/pic2.png')} /> */}
-                                        {/* <Image resizeMode="contain" source={require('../../assets/images/pic3.png')} /> */}
-                                    </View>
-                                } /> :
-                            <View style={{ height: 140, justifyContent: 'center' }}>
-                                <Text style={{
-                                    textAlign: 'center',
-                                    fontSize: 14,
-                                    color: '#5A5A5A'
-                                }}>No photos attached yet</Text>
+                        {uploading ?
+                            <View style={{ alignSelf: "center" }}>
+                                <ProgressCircle
+                                    percent={transferred}
+                                    radius={50}
+                                    borderWidth={8}
+                                    color="#3399FF"
+                                    shadowColor="#999"
+                                    bgColor="#fff"
+                                >
+                                    <Text style={{ fontSize: 18 }}>{transferred}%</Text>
+                                </ProgressCircle>
+
                             </View>
+                            : image !== null ?
+                                <Image source={{ uri: image }} style={{ resizeMode: "cover", width: 100, height: 100, backgroundColor: "red", borderRadius: 10, alignSelf: "center" }} />
+                                : showImages ?
+                                    <FlatList
+                                        data={UploadedImg}
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        renderItem={({ item, index }) =>
+                                            <View style={{}}>
+                                                <Image resizeMode="contain" source={item.img} />
+                                                {/* <Image resizeMode="contain" source={require('../../assets/images/pic2.png')} /> */}
+                                                {/* <Image resizeMode="contain" source={require('../../assets/images/pic3.png')} /> */}
+                                            </View>
+                                        } /> :
+                                    <View style={{ height: 140, justifyContent: 'center' }}>
+                                        <Text style={{
+                                            textAlign: 'center',
+                                            fontSize: 14,
+                                            color: '#5A5A5A'
+                                        }}>No photos attached yet</Text>
+                                    </View>
                         }
 
 
