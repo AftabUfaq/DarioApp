@@ -361,6 +361,7 @@ const DailyRoutine = ({ route, navigation }) => {
                 {RoutineBtn === 'AM' || RoutineBtn === 'PM' ?
                     <View>
                         <NameWithReadMore name="Detersione"
+
                             readMore="Read more about cleansing oil"
                             linkUrl="https://www.didiskincareasiatica.com/detergenti"
                         />
@@ -368,10 +369,12 @@ const DailyRoutine = ({ route, navigation }) => {
 
 
                         <TextInputWithCheck state={cleansingOil}
+                            placeholder="Hado labo cleansing oil"
                             textHandler={cleansingOilHandler}
                         />
 
                         <TextInputWithCheck state={foamingCleanser}
+                            placeholder="Hado labo foaming cleanser"
                             textHandler={foamingCleanserHandler}
                         />
 
@@ -382,6 +385,7 @@ const DailyRoutine = ({ route, navigation }) => {
 
 
                         <TextInputWithCheck state={GreenTea}
+                            placeholder="Bento green tea"
                             textHandler={GreenTeaHandler}
                         />
 
@@ -391,6 +395,7 @@ const DailyRoutine = ({ route, navigation }) => {
                             linkUrl="https://www.didiskincareasiatica.com/essenze" />
 
                         <TextInputWithCheck state={EssenceToner}
+                            placeholder="Pyunkang essence toner"
                             textHandler={EssenceTonerHandler}
                         />
                     </View>

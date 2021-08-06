@@ -14,6 +14,20 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9D3DDFAE545AD419F1F13EA8 /* libPods-DiarioApp-DiarioAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC68D132E1AE749F85DEB964 /* libPods-DiarioApp-DiarioAppTests.a */; };
 		A5DF5BB0F371A9587F26F0FA /* libPods-DiarioApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67CDAD3A214C16D514923052 /* libPods-DiarioApp.a */; };
+		C6652EEA26B6BAA3008D144C /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0420179EDCA0486ABFEBCA6E /* Roboto-Black.ttf */; };
+		C6652EEB26B6BAA3008D144C /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 66EF11A621F548DCA3E73F75 /* Roboto-BlackItalic.ttf */; };
+		C6652EEC26B6BAA3008D144C /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 81B168B1F9C54AA6819CD5C2 /* Roboto-Bold.ttf */; };
+		C6652EED26B6BAA3008D144C /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AADF28A398E8416680FEDF1C /* Roboto-BoldItalic.ttf */; };
+		C6652EEE26B6BAA3008D144C /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB72793A03704EFB877D66A1 /* Roboto-Italic.ttf */; };
+		C6652EEF26B6BAA3008D144C /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 41FC3742C19243E6852107D4 /* Roboto-Light.ttf */; };
+		C6652EF026B6BAA3008D144C /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 35572C5049AC447DB1BE1E2A /* Roboto-LightItalic.ttf */; };
+		C6652EF126B6BAA3008D144C /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4846D9F5E8D44620B48E5B3B /* Roboto-Medium.ttf */; };
+		C6652EF226B6BAA3008D144C /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8291F0ED24C24C21A175408D /* Roboto-MediumItalic.ttf */; };
+		C6652EF326B6BAA3008D144C /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 444A25B74EEB47CD8EF01E31 /* Roboto-Regular.ttf */; };
+		C6652EF426B6BAA3008D144C /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AC9A01BA07AE4F78A4272BBB /* Roboto-Thin.ttf */; };
+		C6652EF526B6BAA3008D144C /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2331D49F16674AB1BF56F72F /* Roboto-ThinItalic.ttf */; };
+		C6652EF626B6BAA3008D144C /* Rosario-Italic-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 278F19C9690741E9B75C867E /* Rosario-Italic-VariableFont_wght.ttf */; };
+		C6652EF726B6BAA3008D144C /* Rosario-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4708C20E3B0F4B49B6C350E6 /* Rosario-VariableFont_wght.ttf */; };
 		C69FDE0826B2AA25000CE8AF /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69FDE0726B2AA25000CE8AF /* File.swift */; };
 /* End PBXBuildFile section */
 
@@ -322,6 +336,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6652EEA26B6BAA3008D144C /* Roboto-Black.ttf in Resources */,
+				C6652EEB26B6BAA3008D144C /* Roboto-BlackItalic.ttf in Resources */,
+				C6652EEC26B6BAA3008D144C /* Roboto-Bold.ttf in Resources */,
+				C6652EED26B6BAA3008D144C /* Roboto-BoldItalic.ttf in Resources */,
+				C6652EEE26B6BAA3008D144C /* Roboto-Italic.ttf in Resources */,
+				C6652EEF26B6BAA3008D144C /* Roboto-Light.ttf in Resources */,
+				C6652EF026B6BAA3008D144C /* Roboto-LightItalic.ttf in Resources */,
+				C6652EF126B6BAA3008D144C /* Roboto-Medium.ttf in Resources */,
+				C6652EF226B6BAA3008D144C /* Roboto-MediumItalic.ttf in Resources */,
+				C6652EF326B6BAA3008D144C /* Roboto-Regular.ttf in Resources */,
+				C6652EF426B6BAA3008D144C /* Roboto-Thin.ttf in Resources */,
+				C6652EF526B6BAA3008D144C /* Roboto-ThinItalic.ttf in Resources */,
+				C6652EF626B6BAA3008D144C /* Rosario-Italic-VariableFont_wght.ttf in Resources */,
+				C6652EF726B6BAA3008D144C /* Rosario-VariableFont_wght.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);

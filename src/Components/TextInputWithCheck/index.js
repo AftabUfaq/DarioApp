@@ -1,15 +1,15 @@
 import React from 'react';
-import { View, Text, TextInput,  StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-const TextInputWithCheck = ({ state, textHandler,toggleModal }) => {
+const TextInputWithCheck = ({ state, placeholder, textHandler, toggleModal }) => {
     return (
         <TouchableOpacity style={styles.textInputWithCheckView} onPress={() => toggleModal()} >
             <TextInput
                 value={state}
                 onChangeText={(val) => textHandler(val)}
-                style={styles.textInput} 
-                placeholder="Hada labo foaming cleanser"
+                style={styles.textInput}
+                placeholder={placeholder}
                 placeholderTextColor="#878787"
             />
             <View style={styles.circleCheckView}>
